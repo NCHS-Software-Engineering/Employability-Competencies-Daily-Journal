@@ -1,4 +1,5 @@
 import Image from "next/image";
+import DailyThought from "@/components/DailyThought";
 
 export default function Home() {
   return (
@@ -10,6 +11,7 @@ export default function Home() {
       </h1>
       <h2 className="text-2xl ml-10">A Place for Competent Journal Entries</h2>
       <p>Enter your journal thoughts and choose your employability competencies below.</p>
+      <DailyThought />
     </main>
   );
 }
