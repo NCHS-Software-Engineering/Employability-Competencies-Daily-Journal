@@ -1,20 +1,41 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type Thought = {
     id: number;
     text: string;
+    time: string;
 };
 
 export default function DailyThought() {
+    
     const [input, setInput] = useState("");
     const [thoughts, setThoughts] = useState<Thought[]>([]);
+
+    // Load saved thoughts once, when the component first appears in the browser
+    useEffect(() => {
+        const saved = localStorage.getItem("dailyThoughts");
+        if (saved) {
+            setThoughts(JSON.parse(saved));
+        }
+    }, []) // Dependency array, runs once when the page loads
 
     const handleSave = () => {
         if (input.trim() === "") return;
 
-        const newThought = {id: Date.now(), text: input}
-        setThoughts([newThought, ...thoughts]); // Store the new thought in front of the previous thoughts
+        const timestamp = new Date().toLocaleString("en-us", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+            hour: "numeric",
+            minute: "2-digit"
+        });
+
+        const newThought = {id: Date.now(), text: input, time: timestamp}
+        const updated = [newThought, ...thoughts];
+        setThoughts(updated); // Store the new thought in front of the previous thoughts
+        localStorage.setItem("dailyThoughts", JSON.stringify(updated));
+        setInput("");
     }
 
     return (
@@ -28,8 +49,7 @@ export default function DailyThought() {
             />
             <button
                 onClick={handleSave}
-                className="mt-3 bg-white text-brand px-4 py-2
-                rounded-md font-semibold hover:bg-black transition-colors cursor-pointer"
+                className="mt-3 bg-white text-brand px-4 py-2 rounded-md font-semibold hover:bg-black transition-colors cursor-pointer"
             >
                 Save Thought
             </button>
@@ -42,6 +62,7 @@ export default function DailyThought() {
                         thoughts.map((thought) => (
                             <div key={thought.id} className="bg-white/20 p-3 rounded-lg shadow-sm">
                                 <p className="text-lg">{thought.text}</p>
+                                <p className="text-sm opacity-80 mt-1">{thought.time}</p>
                             </div>
                         ))
                     )
