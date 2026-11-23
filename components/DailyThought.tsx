@@ -59,7 +59,7 @@ export default function DailyThought() {
                     thoughts.length === 0 ? (
                         <p className="italic text-center">No thoughts here...</p>
                     ) : (
-                        thoughts.map((thought) => (
+                        thoughts.slice(0, 5).map((thought) => (
                             <div key={thought.id} className="bg-white/20 p-3 rounded-lg shadow-sm">
                                 <p className="text-lg">{thought.text}</p>
                                 <p className="text-sm opacity-80 mt-1">{thought.time}</p>
